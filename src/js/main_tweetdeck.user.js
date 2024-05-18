@@ -4,12 +4,12 @@
 // @version         0.1.5.0
 // @namespace       https://memo.furyutei.work/
 // @author          furyu
-// @include         https://tweetdeck.twitter.com/*
+// @include         https://tweetdeck.x.com/*
 // @grant           GM_xmlhttpRequest
 // @grant           GM_setValue
 // @grant           GM_getValue
 // @grant           GM_deleteValue
-// @connect         twitter.com
+// @connect         x.com
 // @connect         twimg.com
 // @connect         cdn.vine.co
 // @require         https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
@@ -117,7 +117,7 @@ var OPTIONS = {
     // /statuses/show.json の場合、15分で900回（正確に 900回／15分というわけではなく、15分毎にリセットされる）→1秒以上は空けておく
     // TODO: 別のタブで並列して実行されている場合や、別ブラウザでの実行は考慮していない
     TWITTER_API2_DELAY_TIME_MS : 5100, // Twitter API2 コール時、前回からの最小間隔(ms)
-    // ※ api.twitter.com/2/timeline/conversation/:id の場合、15分で180回
+    // ※ api.x.com/2/timeline/conversation/:id の場合、15分で180回
     // TODO: 別のタブで並列して実行されている場合や、別ブラウザでの実行は考慮していない
 };
 
@@ -208,7 +208,7 @@ var LANGUAGE = ( () => {
     IS_FIREFOX = ( 0 <= USERAGENT.indexOf( 'firefox' ) ),
     IS_MAC = ( 0 <= PLATFORM.indexOf( 'mac' ) ),
     
-    DOMAIN_PREFIX = location.hostname.match( /^(.+\.)?twitter\.com$/ )[ 1 ] || '',
+    DOMAIN_PREFIX = location.hostname.match( /^(.+\.)?x\.com$/ )[ 1 ] || '',
     
     //LOADING_IMAGE_URL = 'https://abs.twimg.com/a/1460504487/img/t1/spinner-rosetta-gray-32x32.gif',
     LOADING_IMAGE_URL = $( 'link[rel="shortcut icon"]' ).attr( 'href' ) || new URL( '/favicon.ico', d.baseURI ).href,
@@ -502,7 +502,7 @@ function normalize_image_url( source_url ) {
 
 
 function change_image_url( source_url, required_name ) {
-    if ( /^https?:\/\/ton\.twitter\.com\//.test( source_url ) ) {
+    if ( /^https?:\/\/ton\.x\.com\//.test( source_url ) ) {
         // DM の画像は変換しない
         return source_url;
     }
@@ -637,7 +637,7 @@ var fetch_api_json = ( () => {
             }
             
             /*
-            // mobile.twitter.com 等から api.twitter.com を呼ぶと、
+            // mobile.x.com 等から api.x.com を呼ぶと、
             // > Cross-Origin Read Blocking (CORB) blocked cross-origin response <url> with MIME type application/json. See https://www.chromestatus.com/feature/5629709824032768 for more details.
             // のような警告が出て、レスポンスボディが空になってしまう
             // 参考：
@@ -678,8 +678,8 @@ var fetch_api_json = ( () => {
 
 
 var fetch_tweet_video_url = ( () => {
-    //var api_tweet_show_template = 'https://api.twitter.com/1.1/statuses/show.json?include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&skip_status=1&cards_platform=Web-12&include_cards=1&include_ext_alt_text=true&include_reply_count=1&tweet_mode=extended&trim_user=false&include_ext_media_color=true&id=#TWEETID#';
-    var api2_conversation_template = 'https://api.twitter.com/2/timeline/conversation/#TWEETID#.json?include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&include_mute_edge=1&include_can_dm=1&include_can_media_tag=1&skip_status=1&cards_platform=Web-12&include_cards=1&include_composer_source=true&include_ext_alt_text=true&include_reply_count=1&tweet_mode=extended&include_entities=true&include_user_entities=true&include_ext_media_color=true&include_ext_media_availability=true&send_error_codes=true&count=20&ext=mediaStats%2ChighlightedLabel%2CcameraMoment';
+    //var api_tweet_show_template = 'https://api.x.com/1.1/statuses/show.json?include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&skip_status=1&cards_platform=Web-12&include_cards=1&include_ext_alt_text=true&include_reply_count=1&tweet_mode=extended&trim_user=false&include_ext_media_color=true&id=#TWEETID#';
+    var api2_conversation_template = 'https://api.x.com/2/timeline/conversation/#TWEETID#.json?include_profile_interstitial_type=1&include_blocking=1&include_blocked_by=1&include_followed_by=1&include_want_retweets=1&include_mute_edge=1&include_can_dm=1&include_can_media_tag=1&skip_status=1&cards_platform=Web-12&include_cards=1&include_composer_source=true&include_ext_alt_text=true&include_reply_count=1&tweet_mode=extended&include_entities=true&include_user_entities=true&include_ext_media_color=true&include_ext_media_availability=true&send_error_codes=true&count=20&ext=mediaStats%2ChighlightedLabel%2CcameraMoment';
     
     return ( tweet_id ) => {
         //var api_url = api_tweet_show_template.replace( /#TWEETID#/g, tweet_id );
@@ -907,7 +907,7 @@ var add_media_button_to_tweet = ( () => {
                     background_image;
                 
                 try {
-                    //background_image = $element.css( 'background-image' ); // style="background-image: url()" のとき、'url("https://tweetdeck.twitter.com/")' が返されてしまう
+                    //background_image = $element.css( 'background-image' ); // style="background-image: url()" のとき、'url("https://tweetdeck.x.com/")' が返されてしまう
                     background_image = $element.get( 0 ).style.backgroundImage;
                     thumbnail_url = $element.find( 'img.media-img' ).attr( 'src' );
                     if ( ! thumbnail_url ) {
